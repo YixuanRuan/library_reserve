@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>座位地图 - 图书馆座位预约</title>
+    <style id="theme-vars">
+/* Library Seat Booking System - Brand CSS */
+/* 清新学术风 — Fresh Academic Style */
+
+:root {
+  /* === Brand Colors === */
+  --color-primary: #1B7A6E;
+  --color-primary-hover: #15675D;
+  --color-primary-light: #E8F5F3;
+  --color-primary-subtle: #F2FAF8;
+
+  /* === Semantic State Colors === */
+  --state-success: #22A06B;
+  --state-success-bg: #E8F9EF;
+  --state-warning: #D4940A;
+  --state-warning-bg: #FFF8E0;
+  --state-error: #DE350B;
+  --state-error-bg: #FFEBE6;
+  --state-info: #0065FF;
+  --state-info-bg: #E6F0FF;
+
+  /* === Neutral Palette === */
+  --color-bg: #F7F9FC;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-sunken: #EDF1F5;
+  --color-bg-muted: #F0F4F8;
+
+  --color-text: #172B4D;
+  --color-text-secondary: #6B778C;
+  --color-text-muted: #97A0AF;
+  --color-text-inverse: #FFFFFF;
+
+  --color-border: #DFE1E6;
+  --color-border-light: #EBECF0;
+  --color-border-strong: #C1C7D0;
+
+  /* === Typography === */
+  --font-family-title: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-family-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  --font-size-display: 2.25rem;    /* 36px */
+  --font-size-h1: 1.875rem;         /* 30px */
+  --font-size-h2: 1.5rem;           /* 24px */
+  --font-size-h3: 1.25rem;          /* 20px */
+  --font-size-h4: 1.125rem;         /* 18px */
+  --font-size-body: 0.9375rem;      /* 15px */
+  --font-size-small: 0.8125rem;     /* 13px */
+  --font-size-caption: 0.75rem;     /* 12px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  /* === Spacing === */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* === Radius === */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* === Shadows === */
+  --shadow-sm: 0 1px 2px rgba(23, 43, 77, 0.04);
+  --shadow-md: 0 2px 8px rgba(23, 43, 77, 0.04);
+  --shadow-lg: 0 4px 16px rgba(23, 43, 77, 0.04);
+
+  /* === Transition === */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* === Component Tokens === */
+  --control-height: 40px;
+  --control-height-sm: 32px;
+  --control-height-lg: 48px;
+  --control-radius: var(--radius-md);
+}
+
+.dark {
+  --color-primary: #4ECDC4;
+  --color-primary-hover: #6ED8D2;
+  --color-primary-light: #1A2F2C;
+  --color-primary-subtle: #152523;
+
+  --color-bg: #0F1318;
+  --color-bg-elevated: #1A2027;
+  --color-bg-sunken: #13171D;
+  --color-bg-muted: #161B22;
+
+  --color-text: #E2E8F0;
+  --color-text-secondary: #8B95A5;
+  --color-text-muted: #636D7D;
+  --color-text-inverse: #0F1318;
+
+  --color-border: #2D3748;
+  --color-border-light: #232A35;
+  --color-border-strong: #3D4A5C;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-primary: var(--color-primary);
+    --color-border: var(--color-border);
+  }
+  @layer base {
+    body { background: var(--color-background); color: var(--color-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- Navigation -->
+      <nav class="fixed top-0 left-0 right-0 z-50" style="background: var(--color-bg-elevated); border-bottom: 1px solid var(--color-border-light);">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between" style="height: 64px;">
+          <div class="flex items-center gap-8">
+            <a href="#" class="flex items-center gap-2 text-lg font-semibold whitespace-nowrap" style="color: var(--color-primary);">
+              <i data-lucide="book-open" class="w-5 h-5"></i>
+              <span>座位预约</span>
+            </a>
+            <div class="flex items-center gap-1">
+              <a href="#" data-dom-id="nav-home" class="px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-150" style="color: var(--color-text-secondary);">首页</a>
+              <a href="#" data-dom-id="nav-seat-map" data-active="true" class="px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-150" style="color: var(--color-primary); border-bottom: 2px solid var(--color-primary);">座位地图</a>
+              <a href="#" data-dom-id="nav-profile" class="px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-150" style="color: var(--color-text-secondary);">个人中心</a>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button class="flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors duration-150" style="border: 1px solid var(--color-border-light);" aria-label="用户菜单">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium" style="background: var(--color-primary-light); color: var(--color-primary);">李</div>
+              <i data-lucide="chevron-down" class="w-4 h-4" style="color: var(--color-text-muted);"></i>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Header -->
+      <div class="max-w-7xl mx-auto px-6 lg:px-8" style="padding-top: 88px;">
+        <nav class="flex items-center gap-2 text-sm" style="color: var(--color-text-muted);">
+          <a href="#" data-dom-id="nav-home" class="transition-colors duration-150" style="color: var(--color-text-secondary);">首页</a>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          <span style="color: var(--color-text);">座位地图</span>
+        </nav>
+        <h1 class="mt-3 font-semibold tracking-tight" style="font-size: var(--font-size-h1); line-height: 1.25; color: var(--color-text); text-wrap: balance; word-break: keep-all;">座位地图</h1>
+        <p class="mt-1 text-sm" style="color: var(--color-text-secondary);">阅览室座位俯视图，点击座位查看详情并预约</p>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="max-w-7xl mx-auto px-6 lg:px-8" style="margin-top: 24px;">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-sm font-medium whitespace-nowrap" style="color: var(--color-text-secondary);">阅览室</label>
+            <select class="px-3 py-2 text-sm rounded-lg whitespace-nowrap" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border-light); color: var(--color-text); height: var(--control-height); min-width: 160px;">
+              <option>一楼综合阅览室</option>
+              <option>二楼期刊阅览室</option>
+              <option>三楼电子阅览室</option>
+              <option>四楼自习室</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-sm font-medium whitespace-nowrap" style="color: var(--color-text-secondary);">时段</label>
+            <select class="px-3 py-2 text-sm rounded-lg whitespace-nowrap" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border-light); color: var(--color-text); height: var(--control-height); min-width: 120px;">
+              <option>全部时段</option>
+              <option>上午 (8-12)</option>
+              <option>下午 (12-18)</option>
+              <option>晚间 (18-22)</option>
+            </select>
+          </div>
+          <button data-dom-id="seat-map-search" class="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors duration-150" style="background: var(--color-primary); color: var(--color-text-inverse); height: var(--control-height);">
+            <i data-lucide="search" class="w-4 h-4"></i>
+            <span>查询</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content: Seat Map + Detail Panel -->
+      <div class="max-w-7xl mx-auto px-6 lg:px-8" style="margin-top: 24px;">
+        <div class="flex flex-col lg:flex-row gap-6">
+
+          <!-- Left: Seat Map Area -->
+          <div class="flex-1 min-w-0">
+            <div class="rounded-lg" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border-light); box-shadow: var(--shadow-md);">
+              <!-- Room Title -->
+              <div class="px-5 py-4" style="border-bottom: 1px solid var(--color-border-light);">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="layout-grid" class="w-4 h-4" style="color: var(--color-primary);"></i>
+                    <h2 class="text-base font-semibold" style="color: var(--color-text);">一楼综合阅览室</h2>
+                  </div>
+                  <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">平面图</span>
+                </div>
+              </div>
+
+              <!-- Floor Plan -->
+              <div class="px-5 py-6">
+                <!-- Room outline -->
+                <div class="floor-plan-room relative mx-auto" style="max-width: 720px; background: var(--color-bg-muted); border: 2px solid var(--color-border-strong); border-radius: var(--radius-lg); padding: 24px 20px 16px;">
+
+                  <!-- Stage / Entrance area -->
+                  <div class="flex items-center justify-center mb-5" style="height: 36px; background: var(--color-bg-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
+                    <span class="text-xs font-medium" style="color: var(--color-text-muted);">讲台 / 入口</span>
+                  </div>
+
+                  <!-- Seat Grid -->
+                  <div class="seat-grid">
+                    <!-- Row A -->
+                    <div class="flex items-center gap-1 mb-1">
+                      <span class="row-label text-xs font-medium" style="color: var(--color-text-muted); width: 20px; text-align: center;">A</span>
+                      <div class="seat seat-available" data-seat-id="A-01" data-status="available"><span>A-01</span></div>
+                      <div class="seat seat-available" data-seat-id="A-02" data-status="available"><span>A-02</span></div>
+                      <div class="seat seat-reserved" data-seat-id="A-03" data-status="reserved"><span>A-03</span></div>
+                      <div class="seat seat-available" data-seat-id="A-04" data-status="available"><span>A-04</span></div>
+                      <div class="seat seat-selected" data-seat-id="A-05" data-status="available"><span>A-05</span></div>
+                      <div class="seat seat-reserved" data-seat-id="A-06" data-status="reserved"><span>A-06</span></div>
+                      <div class="seat seat-available" data-seat-id="A-07" data-status="available"><span>A-07</span></div>
+                      <div class="seat seat-occupied" data-seat-id="A-08" data-status="occupied"><span>A-08</span></div>
+                    </div>
+                    <!-- Row B -->
+                    <div class="flex items-center gap-1 mb-1">
+                      <span class="row-label text-xs font-medium" style="color: var(--color-text-muted); width: 20px; text-align: center;">B</span>
+                      <div class="seat seat-occupied" data-seat-id="B-01" data-status="occupied"><span>B-01</span></div>
+                      <div class="seat seat-available" data-seat-id="B-02" data-status="available"><span>B-02</span></div>
+                      <div class="seat seat-available" data-seat-id="B-03" data-status="available"><span>B-03</span></div>
+                      <div class="seat seat-reserved" data-seat-id="B-04" data-status="reserved"><span>B-04</span></div>
+                      <div class="seat seat-available" data-seat-id="B-05" data-status="available"><span>B-05</span></div>
+                      <div class="seat seat-available" data-seat-id="B-06" data-status="available"><span>B-06</span></div>
+                      <div class="seat seat-occupied" data-seat-id="B-07" data-status="occupied"><span>B-07</span></div>
+                      <div class="seat seat-available" data-seat-id="B-08" data-status="available"><span>B-08</span></div>
+                    </div>
+
+                    <!-- Aisle -->
+                    <div class="aisle-row"></div>
+
+                    <!-- Row C -->
+                    <div class="flex items-center gap-1 mb-1">
+                      <span class="row-label text-xs font-medium" style="color: var(--color-text-muted); width: 20px; text-align: center;">C</span>
+                      <div class="seat seat-mine" data-seat-id="C-01" data-status="mine"><span>C-01</span></div>
+                      <div class="seat seat-reserved" data-seat-id="C-02" data-status="reserved"><span>C-02</span></div>
+                      <div class="seat seat-available" data-seat-id="C-03" data-status="available"><span>C-03</span></div>
+                      <div class="seat seat-available" data-seat-id="C-04" data-status="available"><span>C-04</span></div>
+                      <div class="seat seat-occupied" data-seat-id="C-05" data-status="occupied"><span>C-05</span></div>
+                      <div class="seat seat-available" data-seat-id="C-06" data-status="available"><span>C-06</span></div>
+                      <div class="seat seat-reserved" data-seat-id="C-07" data-status="reserved"><span>C-07</span></div>
+                      <div class="seat seat-available" data-seat-id="C-08" data-status="available"><span>C-08</span></div>
+                    </div>
+                    <!-- Row D -->
+                    <div class="flex items-center gap-1 mb-1">
+                      <span class="row-label text-xs font-medium" style="color: var(--color-text-muted); width: 20px; text-align: center;">D</span>
+                      <div class="seat seat-available" data-seat-id="D-01" data-status="available"><span>D-01</span></div>
+                      <div class="seat seat-available" data-seat-id="D-02" data-status="available"><span>D-02</span></div>
+                      <div class="seat seat-occupied" data-seat-id="D-03" data-status="occupied"><span>D-03</span></div>
+                      <div class="seat seat-reserved" data-seat-id="D-04" data-status="reserved"><span>D-04</span></div>
+                      <div class="seat seat-available" data-seat-id="D-05" data-status="available"><span>D-05</span></div>
+                      <div class="seat seat-available" data-seat-id="D-06" data-status="available"><span>D-06</span></div>
+                      <div class="seat seat-occupied" data-seat-id="D-07" data-status="occupied"><span>D-07</span></div>
+                      <div class="seat seat-available" data-seat-id="D-08" data-status="available"><span>D-08</span></div>
+                    </div>
+
+                    <!-- Aisle -->
+                    <div class="aisle-row"></div>
+
+                    <!-- Row E -->
+                    <div class="flex items-center gap-1 mb-1">
+                      <span class="row-label text-xs font-medium" style="color: var(--color-text-muted); width: 20px; text-align: center;">E</span>
+                      <div class="seat seat-available" data-seat-id="E-01" data-status="available"><span>E-01</span></div>
+                      <div class="seat seat-reserved" data-seat-id="E-02" data-status="reserved"><span>E-02</span></div>
+                      <div class="seat seat-available" data-seat-id="E-03" data-status="available"><span>E-03</span></div>
+                      <div class="seat seat-available" data-seat-id="E-04" data-status="available"><span>E-04</span></div>
+                      <div class="seat seat-reserved" data-seat-id="E-05" data-status="reserved"><span>E-05</span></div>
+                      <div class="seat seat-available" data-seat-id="E-06" data-status="available"><span>E-06</span></div>
+                      <div class="seat seat-available" data-seat-id="E-07" data-status="available"><span>E-07</span></div>
+                      <div class="seat seat-occupied" data-seat-id="E-08" data-status="occupied"><span>E-08</span></div>
+                    </div>
+                    <!-- Row F -->
+                    <div class="flex items-center gap-1">
+                      <span class="row-label text-xs font-medium" style="color: var(--color-text-muted); width: 20px; text-align: center;">F</span>
+                      <div class="seat seat-occupied" data-seat-id="F-01" data-status="occupied"><span>F-01</span></div>
+                      <div class="seat seat-available" data-seat-id="F-02" data-status="available"><span>F-02</span></div>
+                      <div class="seat seat-available" data-seat-id="F-03" data-status="available"><span>F-03</span></div>
+                      <div class="seat seat-reserved" data-seat-id="F-04" data-status="reserved"><span>F-04</span></div>
+                      <div class="seat seat-available" data-seat-id="F-05" data-status="available"><span>F-05</span></div>
+                      <div class="seat seat-available" data-seat-id="F-06" data-status="available"><span>F-06</span></div>
+                      <div class="seat seat-occupied" data-seat-id="F-07" data-status="occupied"><span>F-07</span></div>
+                      <div class="seat seat-available" data-seat-id="F-08" data-status="available"><span>F-08</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Column numbers at bottom -->
+                  <div class="flex items-center gap-1 mt-2 pl-5">
+                    <span style="width: 20px;"></span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">01</span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">02</span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">03</span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">04</span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">05</span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">06</span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">07</span>
+                    <span class="col-label text-xs" style="color: var(--color-text-muted); width: 72px; text-align: center;">08</span>
+                  </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="flex flex-wrap items-center gap-5 mt-5 justify-center">
+                  <div class="flex items-center gap-2">
+                    <div class="legend-dot" style="background: var(--state-success-bg); border: 2px solid var(--state-success);"></div>
+                    <span class="text-xs whitespace-nowrap" style="color: var(--color-text-secondary);">空闲座位</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="legend-dot" style="background: var(--state-error-bg); border: 2px solid var(--state-error);"></div>
+                    <span class="text-xs whitespace-nowrap" style="color: var(--color-text-secondary);">已预约</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="legend-dot" style="background: var(--state-warning-bg); border: 2px solid var(--state-warning);"></div>
+                    <span class="text-xs whitespace-nowrap" style="color: var(--color-text-secondary);">临时占用</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="legend-dot" style="background: var(--color-primary); border: 2px solid var(--color-primary);"></div>
+                    <span class="text-xs whitespace-nowrap" style="color: var(--color-text-secondary);">我的座位</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Seat Detail Panel -->
+          <div class="lg:w-96 shrink-0">
+            <div class="lg:sticky lg:top-24">
+              <div class="rounded-lg" style="background: var(--color-bg-elevated); border: 1px solid var(--color-border-light); box-shadow: var(--shadow-md);">
+                <!-- Panel Header -->
+                <div class="px-5 py-4" style="border-bottom: 1px solid var(--color-border-light);">
+                  <h2 class="text-base font-semibold" style="color: var(--color-text);">座位详情</h2>
+                </div>
+
+                <!-- Seat Info Card -->
+                <div class="px-5 py-5" style="border-bottom: 1px solid var(--color-border-light);">
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center text-lg font-semibold text-white" style="width: 56px; height: 56px; background: var(--color-primary); border-radius: var(--radius-md);">A-05</div>
+                    <div>
+                      <p class="text-sm font-medium" style="color: var(--color-text);">一楼综合阅览室</p>
+                      <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded mt-1" style="background: var(--state-success-bg); color: var(--state-success);">空闲</span>
+                    </div>
+                  </div>
+
+                  <!-- Seat Properties -->
+                  <div class="mt-4 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs" style="color: var(--color-text-muted);">座位类型</span>
+                      <span class="text-sm" style="color: var(--color-text);">普通座位</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs" style="color: var(--color-text-muted);">电源插座</span>
+                      <span class="text-sm" style="color: var(--state-success);">有</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs" style="color: var(--color-text-muted);">位置描述</span>
+                      <span class="text-sm" style="color: var(--color-text);">靠窗第2排</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Time Slots -->
+                <div class="px-5 py-5" style="border-bottom: 1px solid var(--color-border-light);">
+                  <h3 class="text-sm font-semibold mb-3" style="color: var(--color-text);">今日时段预约</h3>
+                  <!-- Time axis -->
+                  <div class="relative" style="height: 32px; background: var(--color-bg-muted); border-radius: var(--radius-sm);">
+                    <!-- Labels -->
+                    <div class="absolute flex justify-between w-full px-1 -bottom-5">
+                      <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">08:00</span>
+                      <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">12:00</span>
+                      <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">18:00</span>
+                      <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">22:00</span>
+                    </div>
+                    <!-- Reserved block: afternoon 12-18 -->
+                    <div class="absolute top-1" style="left: 33.3%; width: 33.3%; height: calc(100% - 8px); background: var(--state-error-bg); border: 1px solid var(--state-error); border-radius: 4px; opacity: 0.7;"></div>
+                    <!-- Available: morning -->
+                    <div class="absolute top-1" style="left: 0; width: 33.3%; height: calc(100% - 8px); background: var(--state-success-bg); border: 1px solid var(--state-success); border-radius: 4px; opacity: 0.5;"></div>
+                    <!-- Available: evening -->
+                    <div class="absolute top-1" style="left: 66.6%; width: 33.4%; height: calc(100% - 8px); background: var(--state-success-bg); border: 1px solid var(--state-success); border-radius: 4px; opacity: 0.5;"></div>
+                    <!-- Current time marker -->
+                    <div class="absolute top-0" style="left: 25%; width: 2px; height: 100%; background: var(--color-primary); border-radius: 1px;">
+                      <div class="absolute -top-0.5 -translate-x-1/2" style="width: 8px; height: 8px; background: var(--color-primary); border-radius: 50%;"></div>
+                    </div>
+                  </div>
+                  <div class="flex justify-between mt-7">
+                    <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">上午 (8-12)</span>
+                    <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">下午 (12-18)</span>
+                    <span class="text-xs whitespace-nowrap" style="color: var(--color-text-muted);">晚间 (18-22)</span>
+                  </div>
+                </div>
+
+                <!-- Booking Action -->
+                <div class="px-5 py-5">
+                  <h3 class="text-sm font-semibold mb-3" style="color: var(--color-text);">选择时段</h3>
+                  <div class="flex gap-2 mb-4">
+                    <button data-dom-id="slot-morning" class="flex-1 inline-flex items-center justify-center px-3 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-colors duration-150" style="background: var(--color-primary-light); color: var(--color-primary); border: 1px solid var(--color-primary); height: var(--control-height);">
+                      上午
+                    </button>
+                    <button data-dom-id="slot-afternoon" class="flex-1 inline-flex items-center justify-center px-3 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-colors duration-150" style="background: var(--color-bg-muted); color: var(--color-text-muted); border: 1px solid var(--color-border-light); height: var(--control-height); cursor: not-allowed; opacity: 0.6;">
+                      下午
+                    </button>
+                    <button data-dom-id="slot-evening" class="flex-1 inline-flex items-center justify-center px-3 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-colors duration-150" style="background: var(--color-primary-light); color: var(--color-primary); border: 1px solid var(--color-primary); height: var(--control-height);">
+                      晚间
+                    </button>
+                  </div>
+                  <button data-dom-id="book-seat" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-lg whitespace-nowrap transition-all duration-150" style="background: var(--color-primary); color: var(--color-text-inverse); height: var(--control-height-lg);">
+                    <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                    <span>立即预约</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer style="margin-top: 80px; background: var(--color-bg-elevated); border-top: 1px solid var(--color-border-light);">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-sm" style="color: var(--color-text-muted);">图书馆座位预约系统</p>
+            <p class="text-xs" style="color: var(--color-text-muted);">Copyright 2025 版权所有</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <style>
+      /* === Seat Grid CSS === */
+      .seat-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .seat-grid > div:not(.aisle-row) {
+        gap: 4px;
+      }
+      .aisle-row {
+        height: 20px;
+        margin: 8px 0;
+      }
+
+      .seat {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 44px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                    border-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                    box-shadow 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        position: relative;
+        border: 2px solid transparent;
+        user-select: none;
+      }
+      .seat span {
+        pointer-events: none;
+        line-height: 1;
+      }
+
+      /* Available seat */
+      .seat-available {
+        background: var(--state-success-bg);
+        border-color: var(--state-success);
+        color: var(--state-success);
+      }
+      .seat-available:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(34, 160, 107, 0.15);
+      }
+
+      /* Reserved seat */
+      .seat-reserved {
+        background: var(--state-error-bg);
+        border-color: var(--state-error);
+        color: var(--state-error);
+        cursor: default;
+        opacity: 0.85;
+      }
+      .seat-reserved::after {
+        content: '已预约';
+        position: absolute;
+        top: -6px;
+        right: -2px;
+        font-size: 9px;
+        font-weight: 600;
+        background: var(--state-error);
+        color: white;
+        padding: 1px 4px;
+        border-radius: 3px;
+        line-height: 1.3;
+      }
+      .seat-reserved:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* Occupied seat */
+      .seat-occupied {
+        background: var(--state-warning-bg);
+        border-color: var(--state-warning);
+        color: var(--state-warning);
+        cursor: default;
+        opacity: 0.85;
+      }
+      .seat-occupied:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* My seat */
+      .seat-mine {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: var(--color-text-inverse);
+      }
+      .seat-mine:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(27, 122, 110, 0.2);
+      }
+
+      /* Selected seat */
+      .seat-selected {
+        background: var(--state-success-bg);
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(27, 122, 110, 0.18);
+        font-weight: 600;
+      }
+      .seat-selected:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(27, 122, 110, 0.22);
+      }
+
+      /* Legend dot */
+      .legend-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+
+      /* CTA button hover */
+      [data-dom-id="book-seat"] { transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+      [data-dom-id="book-seat"]:hover { background: var(--color-primary-hover) !important; transform: translateY(-1px); }
+      [data-dom-id="book-seat"]:active { transform: translateY(0); }
+      [data-dom-id="book-seat"]:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+      /* Slot button hover */
+      [data-dom-id="slot-morning"]:hover,
+      [data-dom-id="slot-evening"]:hover { background: var(--color-primary) !important; color: white !important; }
+      [data-dom-id="slot-morning"]:focus-visible,
+      [data-dom-id="slot-evening"]:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+      /* Search button hover */
+      [data-dom-id="seat-map-search"] { transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+      [data-dom-id="seat-map-search"]:hover { background: var(--color-primary-hover) !important; transform: translateY(-1px); }
+      [data-dom-id="seat-map-search"]:active { transform: translateY(0); }
+      [data-dom-id="seat-map-search"]:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+      /* Nav link hover */
+      [data-dom-id="nav-home"]:hover,
+      [data-dom-id="nav-profile"]:hover { color: var(--color-primary) !important; }
+      [data-dom-id="nav-home"]:focus-visible,
+      [data-dom-id="nav-profile"]:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: 4px; }
+
+      /* Breadcrumb home link hover */
+      nav a[data-dom-id="nav-home"]:hover { color: var(--color-primary) !important; }
+
+      /* User avatar button hover */
+      .flex > button[aria-label="用户菜单"]:hover { border-color: var(--color-primary) !important; }
+      .flex > button[aria-label="用户菜单"]:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+      /* Floor plan room responsive */
+      @media (max-width: 640px) {
+        .seat {
+          width: 40px;
+          height: 32px;
+          font-size: 9px;
+          border-radius: 4px;
+        }
+        .seat-grid > div:not(.aisle-row) {
+          gap: 2px;
+        }
+        .col-label { width: 42px !important; }
+        .row-label { width: 14px !important; font-size: 10px !important; }
+        .seat-reserved::after { display: none; }
+        .floor-plan-room { padding: 16px 10px 12px !important; }
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .seat,
+        [data-dom-id="book-seat"],
+        [data-dom-id="seat-map-search"],
+        [data-dom-id="slot-morning"],
+        [data-dom-id="slot-evening"] { transition-duration: 0.01ms !important; }
+      }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

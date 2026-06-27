@@ -1,0 +1,190 @@
+:root {
+  /* === Brand Colors === */
+  --color-primary: #1B7A6E;
+  --color-primary-hover: #15675D;
+  --color-primary-light: #E8F5F3;
+  --color-primary-subtle: #F2FAF8;
+
+  /* === Semantic State Colors === */
+  --state-success: #22A06B;
+  --state-success-bg: #E8F9EF;
+  --state-warning: #D4940A;
+  --state-warning-bg: #FFF8E0;
+  --state-error: #DE350B;
+  --state-error-bg: #FFEBE6;
+  --state-info: #0065FF;
+  --state-info-bg: #E6F0FF;
+
+  /* === Neutral Palette === */
+  --color-bg: #F7F9FC;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-sunken: #EDF1F5;
+  --color-bg-muted: #F0F4F8;
+
+  --color-text: #172B4D;
+  --color-text-secondary: #6B778C;
+  --color-text-muted: #97A0AF;
+  --color-text-inverse: #FFFFFF;
+
+  --color-border: #DFE1E6;
+  --color-border-light: #EBECF0;
+  --color-border-strong: #C1C7D0;
+
+  /* === Typography === */
+  --font-family-title: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-family-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+  --font-size-display: 2.25rem;
+  --font-size-h1: 1.875rem;
+  --font-size-h2: 1.5rem;
+  --font-size-h3: 1.25rem;
+  --font-size-h4: 1.125rem;
+  --font-size-body: 0.9375rem;
+  --font-size-small: 0.8125rem;
+  --font-size-caption: 0.75rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  /* === Spacing === */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* === Radius === */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* === Shadows === */
+  --shadow-sm: 0 1px 2px rgba(23, 43, 77, 0.04);
+  --shadow-md: 0 2px 8px rgba(23, 43, 77, 0.04);
+  --shadow-lg: 0 4px 16px rgba(23, 43, 77, 0.04);
+
+  /* === Transition === */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* === Component Tokens === */
+  --control-height: 40px;
+  --control-height-sm: 32px;
+  --control-height-lg: 48px;
+  --control-radius: var(--radius-md);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+select {
+  font-family: inherit;
+}
+
+/* Utility classes */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
